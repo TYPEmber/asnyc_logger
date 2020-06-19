@@ -57,5 +57,10 @@ use log::{LevelFilter, SetLoggerError};
 static LOGGER: AsyncLogger = AsyncLogger;
 
 pub fn init() -> Result<(), SetLoggerError> {
+    // disable coloring on on support platform
+    if cfg!(windows) && !yansi::Paint::enable_windows_ascii() {
+        yansi::Paint::disable();
+    }
+
     log::set_logger(&LOGGER).map(|()| log::set_max_level(LevelFilter::Info))
 }
